@@ -2,6 +2,8 @@
 
 class Required extends \V8n\Rule {
 
+	protected $errorMsg = '%s is required';
+
 	public function validate( $value )
 	{
 		if (is_string($value)) {

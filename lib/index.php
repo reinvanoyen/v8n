@@ -8,28 +8,21 @@ require 'Rule/Email.php';
 require 'Rule/Custom.php';
 require 'Rule/Between.php';
 
-$validator = new \v8n\Validator();
+$validator = new \V8n\Validator();
 
 $validator
-	->addRule(new Required())
-	->addRule(new Between(1, 5))
-	->addRule(new Custom(function( $value ) {
-		return $value === 'test';
-	}));
+	->addRule('first_name', new Required())
+	->addRule('last_name', [
+		new Required(),
+		new Between(10, 20),
+	])
+	->addRule('address', new Required())
+;
 
-var_dump( $validator->validate('test') );
-var_dump( $validator->validate('test') );
-var_dump( $validator->validate('test') );
-var_dump( $validator->validate(' ') );
-var_dump( $validator->validate('') );
-var_dump( $validator->validate(false) );
-var_dump( $validator->validate('fdsds') );
+$validator->validate([
+	'first_name' => '',
+	'last_name' => 'Van Oyen',
+	'address' => '',
+]);
 
-$validator2 = new \v8n\Validator();
-
-$validator2
-	->addRule(new Required())
-	->addRule(new Email());
-
-var_dump( $validator2->validate('rein@tnt.be') );
-var_dump( $validator2->validate('rein') );
+var_dump( $validator->getErrorMessages() );

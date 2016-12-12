@@ -2,6 +2,8 @@
 
 class Between extends \V8n\Rule {
 
+	protected $errorMsg = '%s should be between %s and %s';
+
 	private $min;
 	private $max;
 
@@ -22,5 +24,10 @@ class Between extends \V8n\Rule {
 		}
 
 		return $value > $this->min && $value < $this->max;
+	}
+
+	public function getErrorMessage()
+	{
+		return sprintf($this->errorMsg, $this->getKey(), $this->min, $this->max);
 	}
 }

@@ -2,22 +2,46 @@
 
 namespace V8n;
 
-class Validator {
+class Validator
+{
+	protected $rules = [];
+	private $errors = [];
 
-	private $rules = [];
-
-	public function addRule(Rule $rule)
+	public function addRule($key, $rules)
 	{
-		$this->rules[] = $rule;
+		if (!isset($this->rules[$key])) {
+			$this->rules[$key] = [];
+		}
+		if (is_array($rules)) {
+			foreach ($rules as $rule) {
+				$rule->setKey($key);
+				$this->rules[$key][] = $rule;
+			}
+		} else {
+			$rule = $rules;
+			$rule->setKey($key);
+			$this->rules[$key][] = $rule;
+		}
 		return $this;
 	}
 
-	public function validate($value)
+	public function validate($array)
 	{
-		$valid = true;
-		foreach( $this->rules as $rule ) {
-			$valid = ( $rule->validate($value) && $valid );
+		$this->errors = [];
+
+		foreach ($this->rules as $key => $rules) {
+			foreach ($rules as $rule) {
+				if (!$rule->validate( isset($array[$key]) ? $array[$key] : null )) {
+					$this->errors[] = $rule->getErrorMessage();
+				}
+			}
 		}
-		return $valid;
+
+		return count( $this->errors ) === 0;
+	}
+
+	public function getErrorMessages()
+	{
+		return $this->errors;
 	}
 }
