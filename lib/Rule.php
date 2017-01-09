@@ -22,6 +22,6 @@ abstract class Rule {
 
 	public function getErrorMessage()
 	{
-		return sprintf($this->errorMsg, $this->getKey());
+		return $this->errorMsg;
 	}
 }

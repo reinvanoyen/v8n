@@ -19,10 +19,14 @@ $validator
 	->addRule('address', new Required())
 ;
 
+$validator->setAliasses([
+	'first_name' => 'First name',
+]);
+
 $validator->validate([
 	'first_name' => '',
 	'last_name' => 'Van Oyen',
 	'address' => '',
 ]);
 
-var_dump( $validator->getErrorMessages() );
+var_dump($validator->getErrorMessages());

@@ -5,6 +5,7 @@ namespace V8n;
 class Validator
 {
 	protected $rules = [];
+	private $aliasses = [];
 	private $errors = [];
 
 	public function addRule($key, $rules)
@@ -32,12 +33,26 @@ class Validator
 		foreach ($this->rules as $key => $rules) {
 			foreach ($rules as $rule) {
 				if (!$rule->validate( isset($array[$key]) ? $array[$key] : null )) {
-					$this->errors[] = $rule->getErrorMessage();
+					$this->errors[] = sprintf($rule->getErrorMessage(), $this->getAlias($rule->getKey()));
 				}
 			}
 		}
 
 		return count( $this->errors ) === 0;
+	}
+
+	public function getAlias($key)
+	{
+		if(isset($this->aliasses[$key])) {
+			return $this->aliasses[$key];
+		}
+
+		return $key;
+	}
+
+	public function setAliasses($aliasses)
+	{
+		$this->aliasses = $aliasses;
 	}
 
 	public function getErrorMessages()
